@@ -1,0 +1,167 @@
+# EvalForge — Evaluation Configuration
+# Controls default behavior for all evaluation runs.
+# Can be overridden per-run via API request body or CLI --config flag.
+
+# Global defaults
+evaluation:
+  concurrency: 10          # Parallel API calls; tune down if hitting rate limits
+  max_retries: 3           # Retries per sample on transient failures (exp. backoff)
+  timeout_seconds: 60      # Hard timeout per provider call
+  temperature: 0.0         # Deterministic — REQUIRED for reproducible benchmarks
+  max_tokens: 2048
+
+# Metric profiles
+# "default" = fast quality signal. "extended" = full comparison suite.
+metrics:
+  default:
+    - exact_match
+  extended:
+    - exact_match
+    - rouge_l
+    - bleu
+    - bertscore
+    - llm_judge
+
+# Benchmark configurations
+# shots: few-shot examples prepended (0 = zero-shot)
+# temperature: always 0.0 for MC/exact-match; may vary for code pass@k > 1
+# tools: whether to enable function/tool calling (almost always false)
+# reasoning: whether to prompt for chain-of-thought before final answer
+# pass_k: for code benchmarks — compute pass@k for listed k values
+# n_samples: null = full dataset; set int for quick pilot runs
+
+benchmarks:
+
+  # MMLU (Massive Multitask Language Understanding)
+  # 14,042 questions across 57 academic subjects. 5-shot is canonical (Brown 2020).
+  mmlu:
+    split: test
+    n_samples: null
+    shots: 5                # 5-shot is canonical; reduces variance vs 0-shot
+    temperature: 0.0
+    tools: false
+    subjects: all           # or list: ["anatomy", "abstract_algebra", "law", ...]
+    scoring: exact_match    # Extract A/B/C/D letter from response
+
+  # MMLU-Pro
+  # Harder MMLU variant: 10 answer choices, more reasoning-intensive, 12,032 questions.
+  # CoT strongly recommended — scores jump ~10-15 pts.
+  mmlu_pro:
+    split: test
+    n_samples: null
+    shots: 5
+    temperature: 0.0
+    tools: false
+    reasoning: true         # Prompt: "Think step by step before answering."
+    n_choices: 10           # 10-choice MC (harder to guess, better signal)
+    scoring: exact_match
+
+  # HLE (Humanity's Last Exam)
+  # 2,500 expert-level questions across math, science, law, humanities.
+  # Designed to be near-impossible for frontier models (~10% SOTA accuracy).
+  hle:
+    split: test
+    n_samples: null
+    shots: 0                # No standard few-shot; domain too diverse
+    temperature: 0.0
+    tools: false
+    reasoning: true         # CoT helps even if final score is low
+    task_types:
+      - multiple_choice
+      - open_ended          # Some HLE questions are free-form
+    scoring:
+      multiple_choice: exact_match
+      open_ended: llm_judge  # No gold string; needs judge for open-ended
+
+  # GPQA (Graduate-Level Google-Proof Q&A)
+  # 448 PhD-level science questions (physics, chemistry, biology).
+  # Diamond subset (198q) is hardest and most commonly reported.
+  gpqa:
+    split: test
+    n_samples: null
+    shots: 0                # 0-shot standard (Brown 2023 paper)
+    temperature: 0.0
+    tools: false
+    reasoning: true         # CoT is critical here; o1/R1 models gain +20pts
+    subset: diamond         # "diamond" (198q) | "extended" (448q) | "main"
+    n_choices: 4
+    scoring: exact_match
+
+  # SimpleQA
+  # 4,326 short factual questions with unambiguous single-word/phrase answers.
+  # Created by OpenAI to measure factual recall and hallucination rate.
+  simpleqa:
+    split: test
+    n_samples: null
+    shots: 0
+    temperature: 0.0
+    tools: false
+    reasoning: false        # No CoT — direct factual recall test
+    scoring: exact_match    # Strict string match on short answers
+    # Also tracks: % "I don't know" (calibration) vs wrong confident answers
+
+  # AGIEval
+  # Tests on actual human standardized exams: SAT, LSAT, GRE, GaoKao, AMC, AQuA.
+  # Measures alignment with human-defined difficulty and reasoning.
+  agieval:
+    split: test
+    n_samples: null
+    shots: 3                # 3-5 shot; subtask-specific (0 for math, 3 for reading)
+    temperature: 0.0
+    tools: false
+    reasoning: true         # CoT benefits math/logic subtasks significantly
+    subtasks: all           # or list: ["sat-math", "lsat-lr", "aqua-rat", ...]
+    scoring:
+      multiple_choice: exact_match
+      open_ended: llm_judge
+
+  # GSM8K (Grade School Math)
+  # 1,319 grade-school math word problems. Tests multi-step arithmetic reasoning.
+  # 8-shot CoT is the canonical setup (Cobbe 2021).
+  gsm8k:
+    split: test
+    n_samples: null
+    shots: 8                # 8-shot CoT from the original paper
+    temperature: 0.0
+    tools: false
+    reasoning: true         # CoT is essential; 0-shot ~40%, 8-shot ~60%+
+    scoring: exact_match    # Extract final numeric answer (strip "$", ",", spaces)
+
+  # HellaSwag
+  # 70,000 commonsense NLI questions about everyday situations.
+  hellaswag:
+    split: validation
+    n_samples: null
+    shots: 10               # 10-shot is standard
+    temperature: 0.0
+    tools: false
+    reasoning: false        # Pattern-completion; CoT not standard here
+    scoring: exact_match
+
+  # TruthfulQA
+  # 817 questions designed to elicit false answers via common misconceptions.
+  # MC2 = rank all truthful answers (harder, better signal than MC1).
+  truthfulqa:
+    split: validation
+    n_samples: null
+    shots: 0                # 0-shot standard; few-shot can leak answer patterns
+    temperature: 0.0
+    tools: false
+    reasoning: false
+    mc_mode: mc2            # mc2 has better inter-rater agreement and model spread
+
+  # HumanEval (Code Generation)
+  # 164 hand-crafted Python problems with unit test suites.
+  # pass@1 uses temperature=0 (deterministic). pass@k (k>1) needs temperature>0.
+  humaneval:
+    n_samples: 164
+    shots: 0                # 0-shot: only the docstring + function signature
+    temperature: 0.0        # For pass@1 only; override to 0.8 for pass@10/100
+    tools: false
+    reasoning: false        # Direct code completion; no CoT in the prompt
+    pass_k: [1]             # [1] for deterministic; [1, 10, 100] for stochastic
+    execution_timeout: 10   # Seconds per test case execution
+    # pass@10 and pass@100 require k samples per problem with temperature=0.8
+    temperature_override:
+      pass_at_10: 0.8
+      pass_at_100: 0.8

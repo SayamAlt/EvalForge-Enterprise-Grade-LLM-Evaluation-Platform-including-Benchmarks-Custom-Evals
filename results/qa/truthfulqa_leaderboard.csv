@@ -1,0 +1,15 @@
+rank,model_id,provider,answer_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,o3-mini,openai,0.0,2976.91,0.0021876,120,0
+2,gpt-4o-mini,openai,0.0,2558.83,0.0001047,120,0
+3,mistral-large-2,mistral,0.0,25679.77,0.0001287,120,0.95
+4,gpt-oss-20b-groq,groq,0.0,4822.09,0.0,120,0.575
+5,gpt-4o,openai,0.0,2852.32,0.0017572,120,0
+6,gpt-oss-120b-groq,groq,0.0,4569.65,0.0,120,0.575
+7,mistral-large-latest,mistral,0.0,8153.5,0.000195,120,0.925
+8,gpt-4-turbo,openai,0.0,7028.29,0.0069397,120,0
+9,llama-3.1-8b-groq,groq,0.0,5485.27,8.8e-06,120,0.6917
+10,qwen3-27b-groq,groq,0.0,4904.2,0.0,120,0.5917
+11,mistral-medium-3,mistral,0.0,4306.48,0.0003331,120,0.2583
+12,magistral-small,mistral,0.0,5313.15,0.0,120,0.4667
+13,mistral-small,mistral,0.0,4888.92,5.54e-05,120,0.4167
+14,ministral-8b,mistral,0.0,3683.62,0.0,120,0

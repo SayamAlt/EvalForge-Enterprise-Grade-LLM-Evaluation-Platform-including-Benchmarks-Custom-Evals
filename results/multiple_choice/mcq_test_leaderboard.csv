@@ -1,0 +1,7 @@
+rank,model_id,provider,choice_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,claude-haiku-4-5,anthropic,1.0,930.01,7.27e-05,3,0
+2,gpt-4o-mini,openai,1.0,2417.25,6.9e-06,3,0
+3,gpt-4o,openai,1.0,985.84,0.0001158,3,0
+4,llama-3.1-8b-groq,groq,1.0,189.43,3.4e-06,3,0
+5,gemini-2.5-flash,google,1.0,1356.35,2.33e-05,3,0
+6,mistral-large-2,mistral,0.6667,1395.56,0.0002767,3,0

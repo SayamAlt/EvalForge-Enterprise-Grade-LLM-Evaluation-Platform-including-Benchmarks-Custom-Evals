@@ -1,0 +1,124 @@
+version: "3.9"
+
+# EvalForge - Full development stack
+# Services: API, Celery worker, PostgreSQL, Redis, MLflow
+services:
+
+  # FastAPI application server
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: evalforge-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://evalforge:evalforge@postgres:5432/evalforge
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/workspace
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app --reload-dir evalforge
+    networks:
+      - evalforge-net
+    restart: unless-stopped
+
+  # Celery evaluation worker
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    container_name: evalforge-worker
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://evalforge:evalforge@postgres:5432/evalforge
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      MLFLOW_TRACKING_URI: http://mlflow:5000
+    depends_on:
+      - api
+      - redis
+      - postgres
+    volumes:
+      - .:/workspace
+    command: celery -A app.workers.celery_app worker --loglevel=info --concurrency=4
+    networks:
+      - evalforge-net
+    restart: unless-stopped
+
+  # PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: evalforge-postgres
+    environment:
+      POSTGRES_USER: evalforge
+      POSTGRES_PASSWORD: evalforge
+      POSTGRES_DB: evalforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evalforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - evalforge-net
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: evalforge-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - evalforge-net
+
+  # MLflow tracking server
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.13.0
+    container_name: evalforge-mlflow
+    ports:
+      - "5001:5000"
+    environment:
+      MLFLOW_BACKEND_STORE_URI: postgresql://evalforge:evalforge@postgres:5432/mlflow
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow/artifacts
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - mlflow_artifacts:/mlflow/artifacts
+    command: >
+      bash -c "pip install --quiet psycopg2-binary &&
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri postgresql://evalforge:evalforge@postgres:5432/mlflow
+      --default-artifact-root /mlflow/artifacts"
+    networks:
+      - evalforge-net
+
+volumes:
+  postgres_data:
+  mlflow_artifacts:
+
+networks:
+  evalforge-net:
+    driver: bridge

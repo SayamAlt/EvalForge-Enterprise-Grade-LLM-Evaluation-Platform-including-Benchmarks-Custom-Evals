@@ -1,0 +1,409 @@
+# EvalForge — Model Registry
+# Pricing: USD per 1M tokens (input / output). Local models = 0.00.
+# context_window: max input tokens the model accepts.
+# type: "standard" | "reasoning" (reasoning models use extended thinking/CoT).
+# tools: whether the model supports function/tool calling.
+
+models:
+
+  # OpenAI
+  gpt-4o:
+    provider: openai
+    model_id: gpt-4o
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 5.00
+      output_per_1m: 15.00
+
+  gpt-4o-mini:
+    provider: openai
+    model_id: gpt-4o-mini
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.15
+      output_per_1m: 0.60
+
+  gpt-4-turbo:
+    provider: openai
+    model_id: gpt-4-turbo
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 10.00
+      output_per_1m: 30.00
+
+  o3-mini:
+    provider: openai
+    model_id: o3-mini
+    type: reasoning           # Extended internal CoT before responding
+    context_window: 200000
+    tools: true
+    pricing:
+      input_per_1m: 1.10
+      output_per_1m: 4.40
+
+  # Anthropic
+  claude-opus-4-7:
+    provider: anthropic
+    model_id: claude-opus-4-7
+    type: standard
+    context_window: 200000
+    tools: true
+    pricing:
+      input_per_1m: 15.00
+      output_per_1m: 75.00
+
+  claude-sonnet-4-6:
+    provider: anthropic
+    model_id: claude-sonnet-4-6
+    type: standard
+    context_window: 200000
+    tools: true
+    pricing:
+      input_per_1m: 3.00
+      output_per_1m: 15.00
+
+  claude-haiku-4-5:
+    provider: anthropic
+    model_id: claude-haiku-4-5-20251001
+    type: standard
+    context_window: 200000
+    tools: true
+    pricing:
+      input_per_1m: 0.25
+      output_per_1m: 1.25
+
+  # Google
+  gemini-2.0-flash:
+    provider: google
+    model_id: gemini-2.0-flash
+    type: standard
+    context_window: 1048576
+    tools: true
+    pricing:
+      input_per_1m: 0.10
+      output_per_1m: 0.40
+
+  gemini-2.5-flash:
+    provider: google
+    model_id: gemini-2.5-flash
+    type: standard
+    context_window: 1048576
+    tools: true
+    pricing:
+      input_per_1m: 0.30
+      output_per_1m: 2.50
+
+  gemini-2.5-pro:
+    provider: google
+    model_id: gemini-2.5-pro
+    type: standard
+    context_window: 1048576
+    tools: true
+    pricing:
+      input_per_1m: 1.25
+      output_per_1m: 10.00
+
+  # DeepSeek
+  deepseek-v3:
+    provider: deepseek
+    model_id: deepseek-chat          # DeepSeek-V3, general-purpose
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.27
+      output_per_1m: 1.10
+
+  deepseek-r1:
+    provider: deepseek
+    model_id: deepseek-reasoner      # DeepSeek-R1 — reasoning model (like o1)
+    type: reasoning                  # Internal CoT; outputs reasoning + answer
+    context_window: 64000
+    tools: false                     # R1 does not support tool calling
+    pricing:
+      input_per_1m: 0.55
+      output_per_1m: 2.19
+
+  deepseek-r1-ollama:
+    provider: ollama
+    model_id: deepseek-r1:7b         # Distilled R1 — local, good for quick evals
+    type: reasoning
+    context_window: 32000
+    tools: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # Qwen (Alibaba Cloud / DashScope API)
+  qwen3-235b:
+    provider: qwen
+    model_id: qwen3-235b-a22b        # MoE flagship — 235B total, 22B active
+    type: reasoning                  # Supports /think mode (extended reasoning)
+    context_window: 32000
+    tools: true
+    pricing:
+      input_per_1m: 0.60
+      output_per_1m: 1.80
+
+  qwen3-30b:
+    provider: qwen
+    model_id: qwen3-30b-a3b          # MoE mid-range — 30B total, 3B active
+    type: reasoning
+    context_window: 32000
+    tools: true
+    pricing:
+      input_per_1m: 0.10
+      output_per_1m: 0.30
+
+  qwen2.5-72b:
+    provider: ollama                 # Local via Ollama (also on API)
+    model_id: qwen2.5:72b
+    type: standard
+    context_window: 32000
+    tools: true
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  qwen2.5-7b:
+    provider: ollama
+    model_id: qwen2.5:7b             # Efficient local model; strong at reasoning for size
+    type: standard
+    context_window: 32000
+    tools: true
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # Moonshot AI (Kimi)
+  kimi-k2:
+    provider: moonshot               # Moonshot AI API
+    model_id: kimi-k2-0711-preview   # Long-context, agentic reasoning
+    type: reasoning
+    context_window: 131072
+    tools: true
+    pricing:
+      input_per_1m: 0.15
+      output_per_1m: 2.50
+
+  kimi-k3:
+    provider: moonshot
+    model_id: kimi-k3-preview        # Latest Kimi; update model_id when GA
+    type: reasoning
+    context_window: 131072
+    tools: true
+    pricing:
+      input_per_1m: 0.20
+      output_per_1m: 3.00
+
+  # MiniMax
+  minimax-m1:
+    provider: minimax                # MiniMax API
+    model_id: MiniMax-M1            # Linear attention MoE; 456B total, 45B active
+    type: reasoning
+    context_window: 1000000         # 1M token context
+    tools: true
+    pricing:
+      input_per_1m: 0.60
+      output_per_1m: 2.40
+
+  minimax-m3:
+    provider: minimax
+    model_id: MiniMax-M3            # Next-gen; update when released
+    type: reasoning
+    context_window: 1000000
+    tools: true
+    pricing:
+      input_per_1m: 0.80
+      output_per_1m: 3.20
+
+  # Groq (hardware inference provider, not a model creator — runs open models on LPU chips at 500-1000 tok/s)
+  llama-3.3-70b-groq:
+    provider: groq
+    model_id: llama-3.3-70b-versatile
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.59
+      output_per_1m: 0.79
+
+  llama-3.1-8b-groq:
+    provider: groq
+    model_id: llama-3.1-8b-instant   # Fastest option on Groq; ~1000 tok/s
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.05
+      output_per_1m: 0.08
+
+  llama-4-scout-groq:
+    provider: groq
+    model_id: meta-llama/llama-4-scout-17b-16e-instruct
+    type: standard
+    context_window: 131072
+    tools: true
+    pricing:
+      input_per_1m: 0.11
+      output_per_1m: 0.34
+
+  qwen3-27b-groq:
+    provider: groq
+    model_id: qwen/qwen3.6-27b
+    type: standard
+    context_window: 32768
+    tools: false
+    pricing:
+      input_per_1m: 0.29
+      output_per_1m: 0.59
+
+  gpt-oss-120b-groq:
+    provider: groq
+    model_id: openai/gpt-oss-120b
+    type: standard
+    context_window: 128000
+    tools: false
+    pricing:
+      input_per_1m: 0.90
+      output_per_1m: 0.90
+
+  gpt-oss-20b-groq:
+    provider: groq
+    model_id: openai/gpt-oss-20b
+    type: standard
+    context_window: 128000
+    tools: false
+    pricing:
+      input_per_1m: 0.20
+      output_per_1m: 0.20
+
+  # Mistral AI
+  mistral-large-2:
+    provider: mistral
+    model_id: mistral-large-2407
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 2.00
+      output_per_1m: 6.00
+
+  mistral-large-latest:
+    provider: mistral
+    model_id: mistral-large-latest
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 2.00
+      output_per_1m: 6.00
+
+  mistral-medium-3:
+    provider: mistral
+    model_id: mistral-medium-3
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.40
+      output_per_1m: 2.00
+
+  mistral-small:
+    provider: mistral
+    model_id: mistral-small-latest
+    type: standard
+    context_window: 32000
+    tools: true
+    pricing:
+      input_per_1m: 0.10
+      output_per_1m: 0.30
+
+  ministral-8b:
+    provider: mistral
+    model_id: ministral-8b-latest
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.10
+      output_per_1m: 0.10
+
+  magistral-small:
+    provider: mistral
+    model_id: magistral-small-latest
+    type: reasoning
+    context_window: 40000
+    tools: false
+    pricing:
+      input_per_1m: 0.50
+      output_per_1m: 1.50
+
+  mistral-nemo:
+    provider: ollama
+    model_id: mistral-nemo:12b       # 12B, strong for size, Apache 2.0
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # Writer (Palmyra / Fable)
+  palmyra-x-004:
+    provider: writer
+    model_id: palmyra-x-004          # Writer's frontier model
+    type: standard
+    context_window: 128000
+    tools: true
+    pricing:
+      input_per_1m: 5.00
+      output_per_1m: 15.00
+
+  # Microsoft
+  phi-4:
+    provider: ollama
+    model_id: phi4:14b               # Microsoft Phi-4, 14B — punches above weight
+    type: standard
+    context_window: 16384
+    tools: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  # Meta LLaMA (local via Ollama)
+  llama3-8b:
+    provider: ollama
+    model_id: llama3:8b
+    type: standard
+    context_window: 8192
+    tools: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  llama3-70b:
+    provider: ollama
+    model_id: llama3:70b
+    type: standard
+    context_window: 8192
+    tools: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0
+
+  mistral-7b:
+    provider: ollama
+    model_id: mistral:7b
+    type: standard
+    context_window: 8192
+    tools: false
+    pricing:
+      input_per_1m: 0.0
+      output_per_1m: 0.0

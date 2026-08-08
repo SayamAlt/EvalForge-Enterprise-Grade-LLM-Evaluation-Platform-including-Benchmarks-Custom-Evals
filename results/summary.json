@@ -1,0 +1,70 @@
+{
+  "evalforge_test_session": "2026-08-07",
+  "api_version": "v1",
+  "custom_datasets": {
+    "mcq_multiple_choice": {
+      "dataset": "MCQ Test (3 samples)",
+      "task_type": "multiple_choice",
+      "metric": "choice_match",
+      "models_evaluated": ["gpt-4o-mini", "gpt-4o"],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "model": "gpt-4o-mini",
+          "choice_match": 1.0,
+          "avg_latency_ms": 2417.25,
+          "cost_per_sample_usd": 0.0000070,
+          "verdict": "PERFECT score, slower, much cheaper"
+        },
+        {
+          "rank": 2,
+          "model": "gpt-4o",
+          "choice_match": 1.0,
+          "avg_latency_ms": 985.84,
+          "cost_per_sample_usd": 0.0001160,
+          "verdict": "PERFECT score, 2.45x faster, 16.6x more expensive"
+        }
+      ],
+      "files": {
+        "eval_gpt4o_mini": "custom_datasets/mcq_eval_gpt4o_mini.json",
+        "eval_gpt4o": "custom_datasets/mcq_eval_gpt4o.json",
+        "leaderboard": "custom_datasets/mcq_leaderboard.json",
+        "comparison": "custom_datasets/mcq_comparison.json",
+        "csv_gpt4o_mini": "custom_datasets/mcq_gpt4o_mini.csv",
+        "csv_gpt4o": "custom_datasets/mcq_gpt4o.csv"
+      }
+    },
+    "classification_sentiment": {
+      "dataset": "Classification Test (3 samples)",
+      "task_type": "classification",
+      "metric": "label_match",
+      "models_evaluated": ["gpt-4o-mini"],
+      "leaderboard": [
+        {
+          "rank": 1,
+          "model": "gpt-4o-mini",
+          "label_match": 0.333,
+          "avg_latency_ms": 1691.28,
+          "cost_per_sample_usd": 0.0000220,
+          "verdict": "1/3 correct — model responded conversationally, not as classifier. Add task instruction to prompt."
+        }
+      ],
+      "files": {
+        "eval_gpt4o_mini": "custom_datasets/classification_eval_gpt4o_mini.json"
+      }
+    }
+  },
+  "benchmarks": {
+    "status": "not_run",
+    "available": ["mmlu", "gsm8k", "hellaswag", "humaneval"],
+    "files": {
+      "info": "benchmarks/README.json"
+    }
+  },
+  "key_findings": [
+    "choice_match metric correctly identifies answers even when model responds verbosely (e.g. 'The capital of France is Paris.' matches reference 'Paris')",
+    "gpt-4o-mini and gpt-4o both scored 1.0 on MCQ — accuracy parity, but gpt-4o-mini is 16.6x cheaper",
+    "classification without task instruction in prompt yields poor scores — dataset must include 'Classify as X/Y/Z:' prefix",
+    "label_match still caught the word 'neutral' inside a verbose response (1/3 correct without any prompt engineering)"
+  ]
+}

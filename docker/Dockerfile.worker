@@ -1,0 +1,20 @@
+FROM python:3.11-slim
+
+WORKDIR /workspace
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir uv
+
+COPY pyproject.toml README.md ./
+RUN uv pip install --system --no-cache -e ".[dev]"
+
+COPY . .
+
+RUN useradd -m -u 1000 evalforge && chown -R evalforge:evalforge /workspace
+USER evalforge
+
+CMD ["celery", "-A", "app.workers.celery_app", "worker", "--loglevel=info", "--concurrency=4"]

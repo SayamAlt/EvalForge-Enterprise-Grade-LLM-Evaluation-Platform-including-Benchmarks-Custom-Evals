@@ -1,0 +1,10 @@
+rank,model_id,provider,answer_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,llama-3.1-8b-groq,groq,0.8436,889.73,5.4e-06,50,0.24
+2,gpt-oss-120b-groq,groq,0.7721,2942.49,0.0,500,0.842
+3,gpt-oss-20b-groq,groq,0.7534,2941.91,0.0,500,0.804
+4,mistral-small,mistral,0.7417,1326.32,1.92e-05,500,0.448
+5,magistral-small,mistral,0.7355,1337.84,0.0,500,0.452
+6,mistral-large-2,mistral,0.7181,4621.82,0.0001259,500,0.864
+7,mistral-medium-3,mistral,0.7062,1781.13,0.0001263,500,0.218
+8,ministral-8b,mistral,0.6888,1563.9,0.0,500,0
+9,qwen3-27b-groq,groq,0.6754,2196.88,0.0,500,0.916

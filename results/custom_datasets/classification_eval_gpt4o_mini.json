@@ -1,0 +1,64 @@
+{
+  "id": "da64488e-e13d-46c9-89e0-4be7799ae02d",
+  "dataset_id": "c0af4142-3009-40a5-b39a-1c06fbbc9d31",
+  "dataset_name": "Classification Test",
+  "model_id": "gpt-4o-mini",
+  "provider": "openai",
+  "status": "done",
+  "num_samples": 3,
+  "num_errors": 0,
+  "error_rate": 0.0,
+  "avg_latency_ms": 1691.2821810007397,
+  "total_cost_usd": 0.000066,
+  "duration_seconds": 2.36,
+  "aggregate_metrics": {
+    "label_match": {
+      "mean": 0.333333,
+      "std": 0.57735,
+      "min": 0.0,
+      "max": 1.0,
+      "n": 3
+    }
+  },
+  "sample_results": [
+    {
+      "sample_id": "Classification Test_000000",
+      "input": "I love this product! It works amazingly well.",
+      "reference": "positive",
+      "prediction": "That's great to hear! What specific product are you referring to? I'd love to know more about what you like about it!",
+      "metrics": { "label_match": 0.0 },
+      "latency_ms": 2359.8439590005,
+      "input_tokens": 17,
+      "output_tokens": 25,
+      "cost_usd": 0.00001755,
+      "error": null
+    },
+    {
+      "sample_id": "Classification Test_000001",
+      "input": "This is terrible, complete waste of money.",
+      "reference": "negative",
+      "prediction": "I'm sorry to hear that you're feeling this way. Can you share more about what specifically is bothering you? Maybe I can help or provide some suggestions.",
+      "metrics": { "label_match": 0.0 },
+      "latency_ms": 1288.925917000597,
+      "input_tokens": 16,
+      "output_tokens": 30,
+      "cost_usd": 0.0000204,
+      "error": null
+    },
+    {
+      "sample_id": "Classification Test_000002",
+      "input": "The product is okay, nothing special.",
+      "reference": "neutral",
+      "prediction": "It sounds like you have a neutral opinion about the product. If you'd like, you can share more details about what you liked or didn't like about it. This could help others who are considering the product!",
+      "metrics": { "label_match": 1.0 },
+      "latency_ms": 1425.0766670011217,
+      "input_tokens": 15,
+      "output_tokens": 43,
+      "cost_usd": 0.00002805,
+      "error": null
+    }
+  ],
+  "created_at": "2026-08-07T21:23:49.298197Z",
+  "completed_at": "2026-08-07T21:23:51.672231Z",
+  "notes": "Model responded conversationally instead of classifying. Dataset lacks a system prompt instructing the model to output a sentiment label. Only 'neutral' sample scored 1.0 because the model's response contained the word 'neutral'. Recommendation: add task instruction to input field (e.g. 'Classify the sentiment as positive/negative/neutral: <text>')."
+}

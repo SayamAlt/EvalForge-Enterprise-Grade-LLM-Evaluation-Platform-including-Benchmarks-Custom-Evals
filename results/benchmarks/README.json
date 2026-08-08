@@ -1,0 +1,28 @@
+{
+  "status": "not_run",
+  "reason": "Benchmark runs (MMLU, GSM8K, HellaSwag, HumanEval) require HuggingFace dataset downloads and live model API calls with many samples. Not executed during endpoint testing to avoid long runtimes and API costs.",
+  "how_to_run": {
+    "endpoint": "POST /api/v1/benchmarks/run",
+    "example_mmlu": {
+      "benchmark": "mmlu",
+      "subject": "anatomy",
+      "model_id": "gpt-4o-mini",
+      "num_samples": 50,
+      "split": "test",
+      "concurrency": 5
+    },
+    "example_gsm8k": {
+      "benchmark": "gsm8k",
+      "model_id": "gpt-4o-mini",
+      "num_samples": 100,
+      "split": "test",
+      "concurrency": 5
+    }
+  },
+  "available_benchmarks": [
+    { "name": "mmlu",      "hf_id": "cais/mmlu",              "task_type": "multiple_choice", "metric": "choice_match",  "needs_subject": true  },
+    { "name": "gsm8k",    "hf_id": "openai/gsm8k",           "task_type": "generation",      "metric": "answer_match",  "needs_subject": false },
+    { "name": "hellaswag","hf_id": "Rowan/hellaswag",        "task_type": "multiple_choice", "metric": "choice_match",  "needs_subject": false },
+    { "name": "humaneval","hf_id": "openai/openai_humaneval", "task_type": "code",            "metric": "code_match",    "needs_subject": false }
+  ]
+}

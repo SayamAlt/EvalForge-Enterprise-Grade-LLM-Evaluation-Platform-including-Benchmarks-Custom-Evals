@@ -1,0 +1,2 @@
+rank,model_id,provider,choice_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,ministral-8b,mistral,0.238,3282.96,0.0,500,0

@@ -1,0 +1,8 @@
+rank,model_id,provider,choice_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,ministral-8b,mistral,0.3333,2438.29,0.0,3,0
+2,mistral-small,mistral,0.0,1405.93,1.43e-05,3,0.6667
+3,mistral-medium-3,mistral,0.0,1891.08,8.43e-05,3,0.6667
+4,llama-3.1-8b-groq,groq,0.0,3394.66,6.2e-06,3,0.6667
+5,llama-3.3-70b-groq,groq,0.0,540.37,5.99e-05,3,0.6667
+6,mistral-large-2,mistral,0.0,0,0.0,3,1.0
+7,magistral-small,mistral,0.0,1676.08,0.0,3,0.6667

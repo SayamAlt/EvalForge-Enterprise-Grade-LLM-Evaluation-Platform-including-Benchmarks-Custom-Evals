@@ -1,0 +1,133 @@
+# EvalForge - LLM-as-a-Judge Configuration
+# Intentionally separate from model_config.yaml to avoid coupling the judge to evaluated models.
+#
+# Default judge: Prometheus-2 (KAIST AI) — open-source, purpose-built evaluator.
+# Fine-tuned on 100K+ human rubrics; GPT-4-level correlation with human judgements.
+# Runs locally via Ollama (no API cost, no commercial provider bias).
+#
+# Anti-bias techniques applied in Sprint 6:
+#   - Position swap: evaluate (A, B) and (B, A), average scores
+#   - Rubric grounding: score against explicit criteria, not vibes
+#   - Reference anchoring: always provide a gold reference answer
+#   - Ensemble judging: average scores from N judges
+
+# Primary judge
+primary:
+  backend: prometheus              # "prometheus" | "ensemble" | "custom_api"
+  model: prometheus-2-8x7b        # Stronger MoE variant (recommended)
+  # model: prometheus-2-7b        # Lighter variant — use if GPU VRAM is limited
+  provider: ollama                 # Runs locally; pull with: ollama pull prometheus2
+  temperature: 0.0
+  max_tokens: 1024
+
+  # Anti-bias: swap position of candidate and reference, average both scores
+  swap_and_average: true
+
+  # Evaluation mode
+  mode: absolute                   # "absolute" (1-5 score) | "relative" (A vs B)
+
+# Ensemble judge (opt-in, more robust)
+# Averages scores from multiple independent judge models.
+# Use when results are high-stakes or models being compared are close in score.
+ensemble:
+  enabled: false                   # Set true to activate in Sprint 6
+  judges:
+    - model: prometheus-2-8x7b
+      provider: ollama
+      weight: 0.40
+    - model: flow-judge-v0.1       # Another open-source eval model (Flowaicom)
+      provider: ollama
+      weight: 0.30
+    - model: atla-selene-mini      # Atla's specialized evaluator (7B)
+      provider: ollama
+      weight: 0.30
+  aggregation: weighted_mean       # "mean" | "weighted_mean" | "majority_vote"
+
+# Rubric definitions
+# All scoring is rubric-grounded - the judge is given explicit criteria,
+# not asked to "rate quality" (which is too subjective and model-dependent).
+rubrics:
+
+  general:
+    scale: 5
+    criteria:
+      1: "Completely incorrect, irrelevant, or incoherent. No useful information."
+      2: "Partially correct but significant errors, missing key information, or off-topic."
+      3: "Mostly correct with minor errors or omissions. Acceptable but not strong."
+      4: "Correct and complete. Minor style issues only. Clearly addresses the question."
+      5: "Exemplary. Accurate, complete, well-structured. Notably better than expected."
+
+  factuality:
+    scale: 3
+    criteria:
+      1: "Factually incorrect. Contains hallucinated or fabricated information."
+      2: "Partially correct. Main claim is right but contains minor factual errors."
+      3: "Fully correct. All stated facts are accurate and well-supported."
+
+  instruction_following:
+    scale: 5
+    criteria:
+      1: "Ignores most instructions. Output format, length, or task completely wrong."
+      2: "Follows some instructions. Key constraints violated (format, length, constraints)."
+      3: "Follows main instructions. Minor constraint violations."
+      4: "Follows all instructions correctly. Output matches expected format and content."
+      5: "Exceeds expectations. Follows all instructions and anticipates implicit needs."
+
+  code_quality:
+    scale: 5
+    criteria:
+      1: "Code does not run or has fatal errors. Wrong language/approach."
+      2: "Code runs but produces wrong output for most inputs."
+      3: "Code is mostly correct. Passes simple cases but fails edge cases."
+      4: "Code is correct and handles edge cases. Readable and idiomatic."
+      5: "Correct, efficient, well-documented. Best-practice implementation."
+
+# Prompt templates
+# Injected into Prometheus-2's expected input format: [INST] {system} {user} [/INST]
+templates:
+
+  absolute: |
+    ###Task Description:
+    An instruction (might include an Input inside it), a response to evaluate,
+    a reference answer that gets a score of 5, and a score rubric representing
+    the evaluation criteria are given.
+    1. Write a detailed feedback that assesses the quality of the response
+       strictly based on the given score rubric, not evaluating in general.
+    2. After writing a feedback, write a score that is an integer between 1 and 5.
+       You should refer to the score rubric.
+    3. The output format should look as follows: "Feedback: (write a feedback for
+       criteria) [RESULT] (an integer number between 1 and 5)"
+    4. Please do not generate any other opening, closing, or explanations.
+
+    ###The instruction to evaluate:
+    {instruction}
+
+    ###Response to evaluate:
+    {response}
+
+    ###Reference Answer (Score 5):
+    {reference}
+
+    ###Score Rubrics:
+    {rubric}
+
+    ###Feedback:
+
+  relative: |
+    ###Task Description:
+    Given an instruction and two responses, determine which response is better.
+    Output "A" if Response A is better, "B" if Response B is better, or "tie".
+
+    ###Instruction:
+    {instruction}
+
+    ###Response A:
+    {response_a}
+
+    ###Response B:
+    {response_b}
+
+    ###Reference Answer:
+    {reference}
+
+    ###Which response is better?

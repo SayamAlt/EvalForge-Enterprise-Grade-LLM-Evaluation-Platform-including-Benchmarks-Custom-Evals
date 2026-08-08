@@ -1,0 +1,7 @@
+rank,model_id,provider,numeric_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,mistral-large-2,mistral,1.0,5121.41,0.000425,25,0.72
+2,claude-sonnet-4-6,anthropic,1.0,4072.5,0.0008508,10,0.6
+3,claude-haiku-4-5,anthropic,0.878,1842.41,0.0008378,500,0
+4,gpt-4o-mini,openai,0.8,3657.94,0.0001902,25,0
+5,gpt-4o,openai,0.76,3245.93,0.0024563,25,0
+6,llama-3.1-8b-groq,groq,0.7059,1157.04,1.38e-05,25,0.32

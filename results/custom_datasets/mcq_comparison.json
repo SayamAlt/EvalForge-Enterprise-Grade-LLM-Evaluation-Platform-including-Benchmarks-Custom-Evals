@@ -1,0 +1,62 @@
+{
+  "run_ids": [
+    "65a47327-83f4-460e-924e-4fd09fca6b5c",
+    "3d032fca-a380-4e95-8104-0c85e6a9bb2e"
+  ],
+  "model_ids": ["gpt-4o-mini", "gpt-4o"],
+  "metrics": ["choice_match"],
+  "aggregate_metrics": {
+    "gpt-4o-mini": { "choice_match": 1.0 },
+    "gpt-4o": { "choice_match": 1.0 }
+  },
+  "win_counts": {
+    "gpt-4o-mini": 3,
+    "gpt-4o": 0
+  },
+  "overall_winner": "gpt-4o-mini",
+  "sample_comparisons": [
+    {
+      "sample_id": "MCQ Test_000000",
+      "input": "What is the capital of France?",
+      "reference": "Paris",
+      "predictions": {
+        "gpt-4o-mini": "The capital of France is Paris.",
+        "gpt-4o": "The capital of France is Paris."
+      },
+      "scores": {
+        "gpt-4o-mini": { "choice_match": 1.0 },
+        "gpt-4o": { "choice_match": 1.0 }
+      },
+      "winner": "gpt-4o-mini"
+    },
+    {
+      "sample_id": "MCQ Test_000001",
+      "input": "What is 2+2?",
+      "reference": "4",
+      "predictions": {
+        "gpt-4o-mini": "2 + 2 equals 4.",
+        "gpt-4o": "2 + 2 equals 4."
+      },
+      "scores": {
+        "gpt-4o-mini": { "choice_match": 1.0 },
+        "gpt-4o": { "choice_match": 1.0 }
+      },
+      "winner": "gpt-4o-mini"
+    },
+    {
+      "sample_id": "MCQ Test_000002",
+      "input": "Which planet is closest to the Sun?",
+      "reference": "Mercury",
+      "predictions": {
+        "gpt-4o-mini": "The planet closest to the Sun is Mercury.",
+        "gpt-4o": "The planet closest to the Sun is Mercury."
+      },
+      "scores": {
+        "gpt-4o-mini": { "choice_match": 1.0 },
+        "gpt-4o": { "choice_match": 1.0 }
+      },
+      "winner": "gpt-4o-mini"
+    }
+  ],
+  "notes": "Tie on accuracy (both 3/3). gpt-4o-mini wins all 3 samples by tiebreak order. gpt-4o is faster (985ms vs 2417ms avg) but costs 16.6x more per sample ($0.000116 vs $0.0000070)."
+}

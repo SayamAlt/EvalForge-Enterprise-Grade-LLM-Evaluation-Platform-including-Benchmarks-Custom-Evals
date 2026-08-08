@@ -1,0 +1,49 @@
+{
+  "experiment_id": "a05c6919-ad11-42ed-af37-145d705c55ec",
+  "experiment_name": "MCQ Model Comparison",
+  "primary_metric": "choice_match",
+  "dataset": "MCQ Test (3 samples, multiple_choice task)",
+  "evaluated_at": "2026-08-07",
+  "entries": [
+    {
+      "rank": 1,
+      "model_id": "gpt-4o-mini",
+      "provider": "openai",
+      "num_runs": 1,
+      "total_samples": 3,
+      "avg_latency_ms": 2417.25,
+      "avg_cost_per_sample": 0.0000070,
+      "metrics": {
+        "choice_match": {
+          "mean": 1.0,
+          "std": 0.0,
+          "min": 1.0,
+          "max": 1.0,
+          "num_runs": 1
+        }
+      },
+      "last_evaluated": "2026-08-07T21:23:41.138219Z"
+    },
+    {
+      "rank": 2,
+      "model_id": "gpt-4o",
+      "provider": "openai",
+      "num_runs": 1,
+      "total_samples": 3,
+      "avg_latency_ms": 985.84,
+      "avg_cost_per_sample": 0.000116,
+      "metrics": {
+        "choice_match": {
+          "mean": 1.0,
+          "std": 0.0,
+          "min": 1.0,
+          "max": 1.0,
+          "num_runs": 1
+        }
+      },
+      "last_evaluated": "2026-08-07T21:24:37.228819Z"
+    }
+  ],
+  "total_models": 2,
+  "notes": "Both models achieved perfect choice_match (1.0). gpt-4o ranked #1 by tiebreak (first added). gpt-4o is 2.45x faster in latency but costs ~16.6x more per sample."
+}

@@ -1,0 +1,7 @@
+rank,model_id,provider,code_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,mistral-small,mistral,0.0,0,0.0,2,1.0
+2,magistral-small,mistral,0.0,0,0.0,2,1.0
+3,ministral-8b,mistral,0.0,3929.44,0.0,2,0
+4,mistral-large-2,mistral,0.0,0,0.0,2,1.0
+5,mistral-medium-3,mistral,0.0,4187.72,0.0005036,2,0
+6,gpt-oss-20b-groq,groq,0.0,5521.03,0.0,2,0

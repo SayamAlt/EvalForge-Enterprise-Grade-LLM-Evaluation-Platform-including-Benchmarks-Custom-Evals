@@ -1,0 +1,63 @@
+{
+  "id": "3d032fca-a380-4e95-8104-0c85e6a9bb2e",
+  "dataset_id": "64ddce0e-bad4-4c22-9d97-170497ee9d3f",
+  "dataset_name": "MCQ Test",
+  "model_id": "gpt-4o",
+  "provider": "openai",
+  "status": "done",
+  "num_samples": 3,
+  "num_errors": 0,
+  "error_rate": 0.0,
+  "avg_latency_ms": 985.842417333212,
+  "total_cost_usd": 0.0003475,
+  "duration_seconds": 1.1,
+  "aggregate_metrics": {
+    "choice_match": {
+      "mean": 1.0,
+      "std": 0.0,
+      "min": 1.0,
+      "max": 1.0,
+      "n": 3
+    }
+  },
+  "sample_results": [
+    {
+      "sample_id": "MCQ Test_000000",
+      "input": "What is the capital of France?",
+      "reference": "Paris",
+      "prediction": "The capital of France is Paris.",
+      "metrics": { "choice_match": 1.0 },
+      "latency_ms": 1102.047833999677,
+      "input_tokens": 14,
+      "output_tokens": 7,
+      "cost_usd": 0.000105,
+      "error": null
+    },
+    {
+      "sample_id": "MCQ Test_000001",
+      "input": "What is 2+2?",
+      "reference": "4",
+      "prediction": "2 + 2 equals 4.",
+      "metrics": { "choice_match": 1.0 },
+      "latency_ms": 867.3085840000567,
+      "input_tokens": 14,
+      "output_tokens": 8,
+      "cost_usd": 0.000115,
+      "error": null
+    },
+    {
+      "sample_id": "MCQ Test_000002",
+      "input": "Which planet is closest to the Sun?",
+      "reference": "Mercury",
+      "prediction": "The planet closest to the Sun is Mercury.",
+      "metrics": { "choice_match": 1.0 },
+      "latency_ms": 988.1708339999022,
+      "input_tokens": 15,
+      "output_tokens": 9,
+      "cost_usd": 0.0001275,
+      "error": null
+    }
+  ],
+  "created_at": "2026-08-07T21:24:36.112052Z",
+  "completed_at": "2026-08-07T21:24:37.228811Z"
+}

@@ -1,0 +1,9 @@
+rank,model_id,provider,choice_match,avg_latency_ms,cost_per_sample_usd,num_samples,error_rate
+1,gpt-oss-120b-groq,groq,0.3052,5834.61,0.0,500,0.692
+2,mistral-small,mistral,0.2917,2091.7,2.99e-05,500,0.52
+3,ministral-8b,mistral,0.264,4014.04,0.0,500,0
+4,qwen3-27b-groq,groq,0.2606,6336.87,0.0,500,0.67
+5,mistral-medium-3,mistral,0.2575,3319.35,0.0002735,500,0.2
+6,magistral-small,mistral,0.2387,2237.51,0.0,500,0.556
+7,llama-3.1-8b-groq,groq,0.2169,4581.3,8.8e-06,500,0.668
+8,gpt-oss-20b-groq,groq,0.1023,6625.13,0.0,500,0.648
